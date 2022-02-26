@@ -9,7 +9,12 @@ import (
 func MakeRoutes(r *gin.Engine) {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "ponga",
+			"message": "a",
+		})
+	})
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "world",
 		})
 	})
 }
