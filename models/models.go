@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/gabrielmrts/golang-api-service/instances"
+	_ "github.com/lib/pq"
 )
 
 func Init() {
