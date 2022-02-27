@@ -3,24 +3,36 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 
+	"github.com/gabrielmrts/golang-api-service/factories"
 	_ "github.com/lib/pq"
 )
 
 func Init() {
-	//JUST TESTING THE DATABASE, IGNORE
-	connStr := "postgres://dev:dev@db:5432/dev?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	db := factories.GetDatabaseInstance()
+
+	fmt.Println("Creating tables..")
+	createTables(db)
+	createSamples(db)
+}
+
+func createTables(db *sql.DB) {
+	files, err := ioutil.ReadDir("./database")
 
 	if err != nil {
 		panic(err)
 	}
 
-	result, err := db.Exec("CREATE TABLE TESTE (id int)")
+	for _, file := range files {
+		filePath := fmt.Sprintf("./database/%s", file.Name())
 
-	if err != nil {
-		panic(err)
+		sql, err := ioutil.ReadFile(filePath)
+
+		if err != nil {
+			panic(err)
+		}
+
+		db.Exec(string(sql))
 	}
-
-	fmt.Print(result)
 }
