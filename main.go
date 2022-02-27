@@ -7,7 +7,7 @@ import (
 )
 
 // Under Construction
-//Just Ignore
+//Just Ignore!!
 func main() {
 	models.Init()
 	r := gin.Default()
