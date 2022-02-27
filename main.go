@@ -9,8 +9,8 @@ import (
 // Under Construction
 //Just Ignore
 func main() {
+	models.Init()
 	r := gin.Default()
 	routes.MakeRoutes(r)
-	models.Init()
 	r.Run()
 }
