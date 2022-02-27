@@ -1,4 +1,4 @@
-package factories
+package instances
 
 import (
 	"database/sql"

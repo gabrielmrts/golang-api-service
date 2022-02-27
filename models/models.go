@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/gabrielmrts/golang-api-service/factories"
+	"github.com/gabrielmrts/golang-api-service/instances"
 	_ "github.com/lib/pq"
 )
 
 func Init() {
-	db := factories.GetDatabaseInstance()
-
-	fmt.Println("Creating tables..")
+	db := instances.GetDatabaseInstance()
 	createTables(db)
 	createSamples(db)
 }
 
 func createTables(db *sql.DB) {
+	fmt.Println("Creating tables..")
+
 	files, err := ioutil.ReadDir("./database")
 
 	if err != nil {

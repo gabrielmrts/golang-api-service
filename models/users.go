@@ -1,6 +1,8 @@
 package models
 
-import "github.com/gabrielmrts/golang-api-service/factories"
+import (
+	"github.com/gabrielmrts/golang-api-service/instances"
+)
 
 type User struct {
 	Username string
@@ -9,7 +11,7 @@ type User struct {
 }
 
 func (s User) Create(user *User) int64 {
-	db := factories.GetDatabaseInstance()
+	db := instances.GetDatabaseInstance()
 
 	stmt, err := db.Prepare("INSERT INTO users(username, email, password) VALUES($1, $2, $3)")
 
