@@ -1,15 +1,26 @@
 package routes
 
 import (
-	"net/http"
-
+	"github.com/gabrielmrts/golang-api-service/controllers"
 	"github.com/gin-gonic/gin"
 )
 
 func MakeRoutes(r *gin.Engine) {
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "working",
-		})
+	userRoutes(r)
+}
+
+func userRoutes(r *gin.Engine) {
+	var controller controllers.UserController
+
+	r.GET("/users", func(c *gin.Context) {
+		controller.FindAll(c)
+	})
+
+	r.POST("/users", func(c *gin.Context) {
+		controller.Add(c)
+	})
+
+	r.GET("/users/:id", func(c *gin.Context) {
+		controller.FindOne(c)
 	})
 }
