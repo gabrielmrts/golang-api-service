@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"crypto/sha512"
+	"encoding/hex"
 	"net/http"
 
-	"github.com/gabrielmrts/golang-api-service/factories"
+	"github.com/gabrielmrts/golang-api-service/instances"
 	"github.com/gabrielmrts/golang-api-service/models"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +13,7 @@ import (
 type UserController struct{}
 
 func (s UserController) FindAll(c *gin.Context) {
-	db := factories.GetDatabaseInstance()
+	db := instances.GetDatabaseInstance()
 
 	rows, err := db.Query("SELECT username, email, password FROM users")
 
@@ -38,19 +40,25 @@ func (s UserController) FindAll(c *gin.Context) {
 	})
 }
 
-func (s UserController) FindOne(c *gin.Context) {
-	db := factories.GetDatabaseInstance()
+func (s UserController) FindOne(c *gin.Context) bool {
+	db := instances.GetDatabaseInstance()
 	var user models.User
 
 	err := db.QueryRow("SELECT username, email, password FROM users WHERE id = $1", c.Param("id")).Scan(&user.Username, &user.Email, &user.Password)
 
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusOK, gin.H{
+			"message": "User not found",
+		})
+
+		return false
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})
+
+	return true
 }
 
 func (s UserController) Add(c *gin.Context) {
@@ -60,9 +68,48 @@ func (s UserController) Add(c *gin.Context) {
 		panic(err)
 	}
 
+	hasher := sha512.New()
+	hasher.Write([]byte(user.Password))
+	hash := hex.EncodeToString(hasher.Sum(nil))
+
+	user.Password = hash
+
 	user.Create(&user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User created",
 	})
+}
+
+func (s UserController) Auth(c *gin.Context) bool {
+	var user models.User
+
+	db := instances.GetDatabaseInstance()
+
+	if err := c.BindJSON(&user); err != nil {
+		panic(err)
+	}
+
+	hasher := sha512.New()
+	hasher.Write([]byte(user.Password))
+	encryptedPassword := hex.EncodeToString(hasher.Sum(nil))
+
+	err := db.QueryRow(`
+			SELECT email FROM users 
+			WHERE username = $1 AND password = $2
+		`, user.Username, encryptedPassword).Scan(&user.Email)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Incorrect credentials",
+		})
+
+		return false
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Login success",
+	})
+
+	return true
 }
