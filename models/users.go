@@ -22,6 +22,7 @@ func (s User) Create(user *User) int64 {
 	res, err := stmt.Exec(user.Username, user.Email, user.Password)
 
 	if err != nil {
+		//Need replace it to return http response
 		panic(err)
 	}
 
