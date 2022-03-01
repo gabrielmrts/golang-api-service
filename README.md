@@ -13,6 +13,7 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
+- [ ] Adicionar suporte à JWT
 - [ ] Adicionar middlewares
 - [ ] Adicionar suporte à arquivos .env
 
