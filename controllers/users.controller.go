@@ -40,7 +40,7 @@ func (s UserController) FindAll(c *gin.Context) {
 	})
 }
 
-func (s UserController) FindOne(c *gin.Context) bool {
+func (s UserController) FindOne(c *gin.Context) {
 	db := instances.GetDatabaseInstance()
 	var user models.User
 
@@ -51,14 +51,12 @@ func (s UserController) FindOne(c *gin.Context) bool {
 			"message": "User not found",
 		})
 
-		return false
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})
-
-	return true
 }
 
 func (s UserController) Add(c *gin.Context) {
@@ -81,7 +79,7 @@ func (s UserController) Add(c *gin.Context) {
 	})
 }
 
-func (s UserController) Auth(c *gin.Context) bool {
+func (s UserController) Auth(c *gin.Context) {
 	var user models.User
 
 	db := instances.GetDatabaseInstance()
@@ -104,12 +102,10 @@ func (s UserController) Auth(c *gin.Context) bool {
 			"message": "Incorrect credentials",
 		})
 
-		return false
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login success",
 	})
-
-	return true
 }

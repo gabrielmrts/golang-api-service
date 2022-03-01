@@ -9,19 +9,11 @@ func userRoutes(r *gin.Engine) {
 
 	var controller controllers.UserController
 
-	r.GET("/users", func(c *gin.Context) {
-		controller.FindAll(c)
-	})
+	r.GET("/users", controller.FindAll)
 
-	r.POST("/users/auth", func(c *gin.Context) {
-		controller.Auth(c)
-	})
+	r.POST("/users/auth", controller.Auth)
 
-	r.POST("/users", func(c *gin.Context) {
-		controller.Add(c)
-	})
+	r.POST("/users", controller.Add)
 
-	r.GET("/users/:id", func(c *gin.Context) {
-		controller.FindOne(c)
-	})
+	r.GET("/users/:id", controller.FindOne)
 }
