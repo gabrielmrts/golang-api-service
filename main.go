@@ -1,14 +1,9 @@
 package main
 
 import (
-	"github.com/gabrielmrts/golang-api-service/models"
-	"github.com/gabrielmrts/golang-api-service/routes"
-	"github.com/gin-gonic/gin"
+	"github.com/gabrielmrts/golang-api-service/app"
 )
 
 func main() {
-	models.Init()
-	r := gin.Default()
-	routes.MakeRoutes(r)
-	r.Run()
+	app.StartApp()
 }
