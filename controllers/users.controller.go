@@ -3,6 +3,7 @@ package controllers
 import (
 	"crypto/sha512"
 	"encoding/hex"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gabrielmrts/golang-api-service/instances"
@@ -13,26 +14,33 @@ import (
 type UserController struct{}
 
 func (s UserController) FindAll(c *gin.Context) {
+
 	db := instances.GetDatabaseInstance()
 
-	rows, err := db.Query("SELECT username, email, password FROM users")
+	rows, err := db.Query("SELECT username, email FROM users")
 
 	if err != nil {
 		panic(err)
 	}
 
-	users := make([]string, 0, 100)
+	users := make([]string, 0, 256)
 
 	for rows.Next() {
 		var user models.User
 
-		err := rows.Scan(&user.Username, &user.Email, &user.Password)
+		err := rows.Scan(&user.Username, &user.Email)
 
 		if err != nil {
 			panic(err)
 		}
 
-		users = append(users, user.Username, user.Email, user.Password)
+		parsedUserToJson, err := json.Marshal(user)
+
+		if err != nil {
+			panic(err)
+		}
+
+		users = append(users, string(parsedUserToJson))
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -106,6 +114,6 @@ func (s UserController) Auth(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Login success",
+		"message": "User created with success",
 	})
 }
