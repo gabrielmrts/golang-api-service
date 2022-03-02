@@ -6,6 +6,6 @@ import (
 )
 
 func createSamples(db *sql.DB) {
-	fmt.Println("Creating sample data..")
+	fmt.Println("Seeding database tables..")
 	db.Exec("INSERT INTO USERS(username, email, password) VALUES('usertest', 'test@email.com', '123456');")
 }

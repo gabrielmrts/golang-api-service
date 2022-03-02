@@ -7,9 +7,11 @@ import (
 )
 
 func createTables(db *sql.DB) {
-	fmt.Println("Creating tables..")
+	fmt.Println("Reading database files..")
 
 	files, err := ioutil.ReadDir("./database")
+
+	fmt.Println("Creating tables..")
 
 	if err != nil {
 		panic(err)
